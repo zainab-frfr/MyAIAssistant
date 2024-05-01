@@ -11,13 +11,44 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<String> items = ['Option 1', 'Option 2', 'Option 3'];
   List<List> allTasks = [];
-  List<String> removed= [];
+  List<String> removed = [];
 
   TextEditingController _taskInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    List<String> daysOfWeek = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 246, 231, 253),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 211, 196, 237),
+        title: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                daysOfWeek[DateTime.now().weekday - 1],
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+              ),
+              Text(
+                "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         child: BottomAppBar(
@@ -66,12 +97,12 @@ class _HomeState extends State<Home> {
                   itemCount: allTasks.length,
                   itemBuilder: (context, index) {
                     return Dismissible(
-                      key: Key(
-                          allTasks[index].toString()), // Unique key for each item
+                      key: Key(allTasks[index]
+                          .toString()), // Unique key for each item
                       onDismissed: (direction) {
                         setState(() {
-                          removed = allTasks
-                              .removeAt(index) as List<String>; // Remove the item from the list
+                          removed = allTasks.removeAt(index)
+                              as List<String>; // Remove the item from the list
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -119,7 +150,7 @@ class _HomeState extends State<Home> {
                               15.0), // Padding inside the tile
                           child: Text(
                             allTasks[index].join(
-                                ', '), // Join the elements of each task list
+                                '\n'), // Join the elements of each task list
                             style: const TextStyle(
                               fontSize: 16.0, // Font size
                               color: Color.fromARGB(255, 82, 81, 81),
