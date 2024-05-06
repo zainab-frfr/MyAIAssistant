@@ -27,6 +27,12 @@ class _HomeState extends State<Home> {
       'Sunday'
     ];
 
+    List<String> timeSlotSelected = [
+      'Day divided into half hour slots',
+      'Day divided into one hour slots',
+    ];
+    int pointer = 0;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 231, 253),
       appBar: AppBar(
@@ -39,11 +45,13 @@ class _HomeState extends State<Home> {
             children: [
               Text(
                 daysOfWeek[DateTime.now().weekday - 1],
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 30.0),
               ),
               Text(
                 "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
             ],
           ),
@@ -56,6 +64,24 @@ class _HomeState extends State<Home> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              FloatingActionButton(
+                tooltip: 'Time Slot Division!',
+                elevation: 3.0,
+                child: const Icon(Icons.av_timer_rounded),
+                onPressed: () {
+                  pointer = (pointer + 1) % timeSlotSelected.length;
+                  print(timeSlotSelected[pointer]);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(timeSlotSelected[pointer]),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(
+                width: 50,
+              ),
               FloatingActionButton(
                 tooltip: 'Add Task!',
                 elevation: 3.0,
@@ -107,6 +133,7 @@ class _HomeState extends State<Home> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text("Task deleted"),
+                            duration: const Duration(seconds: 1),
                             action: SnackBarAction(
                               label: "Undo",
                               onPressed: () {
@@ -114,6 +141,7 @@ class _HomeState extends State<Home> {
                                   allTasks.insert(index, removed);
                                 });
                               },
+                    
                             ),
                           ),
                         );
