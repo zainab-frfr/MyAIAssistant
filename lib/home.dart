@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'create_task.dart';
+import 'task_creation_pages/create_task.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -35,35 +35,42 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 231, 253),
+
+      // app bar on which day and date is displayed 
+
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 211, 196, 237),
         title: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 daysOfWeek[DateTime.now().weekday - 1],
                 style: const TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 30.0),
+                    fontWeight: FontWeight.w900, fontSize: 20.0),
               ),
               Text(
                 "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
                 style: const TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 20.0),
+                    fontWeight: FontWeight.w600, fontSize: 20.0),
               ),
             ],
           ),
         ),
       ),
+
+      // bottom bar on which all the buttons are displayed
+
       bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         child: BottomAppBar(
           color: const Color.fromARGB(255, 211, 196, 237),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //time slot button
               FloatingActionButton(
                 tooltip: 'Time Slot Division!',
                 elevation: 3.0,
@@ -82,6 +89,7 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 width: 50,
               ),
+              //add task button
               FloatingActionButton(
                 tooltip: 'Add Task!',
                 elevation: 3.0,
@@ -103,16 +111,22 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 width: 50,
               ),
+              //generate schedule button 
               FloatingActionButton(
                 tooltip: 'Generate Schedule!',
                 elevation: 3.0,
                 child: const Icon(Icons.list_alt_rounded),
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.pushNamed(context,'/possibleSchedules');
+                },
               ),
             ],
           ),
         ),
       ),
+
+      //body in the middle where list of tasks added will be displayed
+
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Column(
@@ -163,14 +177,14 @@ class _HomeState extends State<Home> {
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 226, 210, 255),
                             borderRadius: BorderRadius.circular(
-                                10.0), // Border radius to round the corners
+                                10.0), 
                             boxShadow: [
                               BoxShadow(
-                                color: const Color.fromARGB(255, 198, 198, 198)
+                                color: const Color.fromARGB(255, 166, 165, 165)
                                     .withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 3,
-                                offset: const Offset(0, 2), // Shadow position
+                                offset: const Offset(0, 2), 
                               ),
                             ],
                           ),
