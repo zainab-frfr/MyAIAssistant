@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; //for making http requests to the backend
+import 'dart:convert'; // for encoding and decoding json data
 import 'task_creation_pages/create_task.dart';
 
 class Home extends StatefulWidget {
@@ -9,15 +11,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<String> items = ['Option 1', 'Option 2', 'Option 3'];
+  List<String> variables = [];
   List<List> allTasks = [];
   List<String> removed = [];
 
   TextEditingController _taskInputController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    List<String> daysOfWeek = [
+  List<String> daysOfWeek = [
       'Monday',
       'Tuesday',
       'Wednesday',
@@ -25,13 +25,48 @@ class _HomeState extends State<Home> {
       'Friday',
       'Saturday',
       'Sunday'
-    ];
+  ];
 
-    List<String> timeSlotSelected = [
-      'Day divided into half hour slots',
-      'Day divided into one hour slots',
-    ];
-    int pointer = 0;
+  List<String> timeSlotSelected = [
+    'Day divided into half hour slots',
+    'Day divided into one hour slots',
+  ];
+  int pointer = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    
+    Future<void> changeTimeSlots() async{//async operation that returns nothing
+      const String url = 'http://zainabfrfr.pythonanywhere.com/variables'; // this is the URL of the endpoint to which backend requests are made
+      final Map<String, String> data = {
+        'timeslot': timeSlotSelected[pointer],
+      };
+
+      final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+        Uri.parse(url),
+        headers: <String, String>{  // defined a map as a header. the map has keys and values both of type string 
+          'Content-Type': 'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+        },
+        body: jsonEncode(data),
+      );
+
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        final Map<String,  dynamic > responseData = json.decode(response.body);
+        final List<String> variablesList = List<String>.from(responseData['variables']);
+        
+        setState(() {
+          variables = variablesList;
+        });
+      } else {
+        print(response.statusCode);
+        // setState(() {
+        //   result = 'Error: ${response.statusCode}';
+        // });
+      }
+
+    }
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 231, 253),
@@ -77,6 +112,7 @@ class _HomeState extends State<Home> {
                 child: const Icon(Icons.av_timer_rounded),
                 onPressed: () {
                   pointer = (pointer + 1) % timeSlotSelected.length;
+                  
                   print(timeSlotSelected[pointer]);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -84,6 +120,9 @@ class _HomeState extends State<Home> {
                       duration: const Duration(seconds: 1),
                     ),
                   );
+                  
+                  changeTimeSlots();
+                  //setState((){});
                 },
               ),
               const SizedBox(
@@ -99,7 +138,7 @@ class _HomeState extends State<Home> {
                       context: context,
                       builder: (BuildContext context) {
                         return CreateTask.build(
-                            context, _taskInputController, items);
+                            context, _taskInputController, variables);
                       });
 
                   print('Entered Task: $enteredTask');
