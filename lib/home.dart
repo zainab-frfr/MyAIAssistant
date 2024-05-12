@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; //for making http requests to the backend
+import 'package:http/http.dart'
+    as http; //for making http requests to the backend
 import 'dart:convert'; // for encoding and decoding json data
 import 'task_creation_pages/create_task.dart';
 
@@ -18,60 +19,103 @@ class _HomeState extends State<Home> {
   TextEditingController _taskInputController = TextEditingController();
 
   List<String> daysOfWeek = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
   ];
 
   List<String> timeSlotSelected = [
-    'Day divided into half hour slots',
     'Day divided into one hour slots',
+    'Day divided into half hour slots',
   ];
   int pointer = 0;
 
   @override
-  Widget build(BuildContext context) {
-    
-    Future<void> changeTimeSlots() async{//async operation that returns nothing
-      const String url = 'http://zainabfrfr.pythonanywhere.com/variables'; // this is the URL of the endpoint to which backend requests are made
-      final Map<String, String> data = {
-        'timeslot': timeSlotSelected[pointer],
-      };
+  void initState() {
+    super.initState();
+    _initializeApp();
+  }
 
-      final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
-        Uri.parse(url),
-        headers: <String, String>{  // defined a map as a header. the map has keys and values both of type string 
-          'Content-Type': 'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
-        },
-        body: jsonEncode(data),
-      );
+  Future<void> _initializeApp() async{
+    const String url = 'http://zainabfrfr.pythonanywhere.com/initialization'; // this is the URL of the endpoint to which backend requests are made
 
+    final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+      Uri.parse(url),
+      headers: <String, String>{// defined a map as a header. the map has keys and values both of type string
+        'Content-Type':'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final List<String> variablesList = List<String>.from(responseData['variables']);
+
+      setState(() {
+        variables = variablesList;
+      });
+    } else {
       print(response.statusCode);
+    }
+  }
 
-      if (response.statusCode == 200) {
-        final Map<String,  dynamic > responseData = json.decode(response.body);
-        final List<String> variablesList = List<String>.from(responseData['variables']);
-        
-        setState(() {
-          variables = variablesList;
-        });
-      } else {
-        print(response.statusCode);
-        // setState(() {
-        //   result = 'Error: ${response.statusCode}';
-        // });
-      }
+  Future<void> _changeTimeSlots() async {
+    //async operation that returns nothing
+    const String url = 'http://zainabfrfr.pythonanywhere.com/variables'; // this is the URL of the endpoint to which backend requests are made
+    final Map<String, String> data = {
+      'timeslot': timeSlotSelected[pointer],
+    };
 
+    final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+      Uri.parse(url),
+      headers: <String, String>{// defined a map as a header. the map has keys and values both of type string
+        'Content-Type': 'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final List<String> variablesList =
+          List<String>.from(responseData['variables']);
+
+      setState(() {
+        variables = variablesList;
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  Future<void> _generateSchedule() async{
+    const String url = 'http://zainabfrfr.pythonanywhere.com/tasks'; // this is the URL of the endpoint to which backend requests are made
+    final Map<String, dynamic> data = {
+      'tasks': allTasks,
+    };
+
+    final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+      Uri.parse(url),
+      headers: <String, String>{// defined a map as a header. the map has keys and values both of type string
+        'Content-Type': 'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200){
+      print("Successful Post Request");
+    }else{
+      print("Unsuccessful Post Request ${response.statusCode}");
     }
 
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 231, 253),
 
-      // app bar on which day and date is displayed 
+      // app bar on which day and date is displayed
 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 211, 196, 237),
@@ -112,7 +156,6 @@ class _HomeState extends State<Home> {
                 child: const Icon(Icons.av_timer_rounded),
                 onPressed: () {
                   pointer = (pointer + 1) % timeSlotSelected.length;
-                  
                   print(timeSlotSelected[pointer]);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -120,8 +163,8 @@ class _HomeState extends State<Home> {
                       duration: const Duration(seconds: 1),
                     ),
                   );
-                  
-                  changeTimeSlots();
+
+                  _changeTimeSlots();
                   //setState((){});
                 },
               ),
@@ -150,13 +193,14 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 width: 50,
               ),
-              //generate schedule button 
+              //generate schedule button
               FloatingActionButton(
                 tooltip: 'Generate Schedule!',
                 elevation: 3.0,
                 child: const Icon(Icons.list_alt_rounded),
                 onPressed: () {
-                   Navigator.pushNamed(context,'/possibleSchedules');
+                  //Navigator.pushNamed(context, '/possibleSchedules');
+                  _generateSchedule();
                 },
               ),
             ],
@@ -194,7 +238,6 @@ class _HomeState extends State<Home> {
                                   allTasks.insert(index, removed);
                                 });
                               },
-                    
                             ),
                           ),
                         );
@@ -215,15 +258,14 @@ class _HomeState extends State<Home> {
                         title: Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 226, 210, 255),
-                            borderRadius: BorderRadius.circular(
-                                10.0), 
+                            borderRadius: BorderRadius.circular(10.0),
                             boxShadow: [
                               BoxShadow(
                                 color: const Color.fromARGB(255, 166, 165, 165)
                                     .withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 3,
-                                offset: const Offset(0, 2), 
+                                offset: const Offset(0, 2),
                               ),
                             ],
                           ),
