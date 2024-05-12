@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'selected_schedule.dart';
+
 class MySchedulePage extends StatefulWidget {
   final List<Map<String, dynamic>> schedules;
 
@@ -31,7 +33,13 @@ class _MySchedulePageState extends State<MySchedulePage> {
                 ],
               ),
               onTap: (){
-                
+                Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MySelectedSchedule(mySchedule: schedule),
+                      ),
+                    );
               },
             );
           },

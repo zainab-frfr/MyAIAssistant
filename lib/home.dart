@@ -206,7 +206,7 @@ class _HomeState extends State<Home> {
             ListTile(
               title: const Text('My Schedule'),
               onTap: () {
-                // Handle item 1 tap
+                Navigator.popAndPushNamed(context, '/mySchedule');
               },
             ),
             ListTile(

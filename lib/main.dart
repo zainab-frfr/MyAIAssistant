@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'login_signup/login.dart';
 import 'login_signup/signup.dart';
 import 'home.dart';
+import 'schedule_generation_pages/selected_schedule.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/home':(context) => const Home(),
         '/login':(context) => const MyLoginPage(),
         '/signup' :(context) => const MySignupPage(),
+        '/mySchedule':(context) => MySelectedSchedule.withoutSchedule(),
       },
     );
   }
