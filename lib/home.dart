@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
     as http; //for making http requests to the backend
@@ -15,6 +17,8 @@ class _HomeState extends State<Home> {
   List<String> variables = [];
   List<List> allTasks = [];
   List<String> removed = [];
+
+  List<Map<String, dynamic>> allPossibleSchedules = [];
 
   TextEditingController _taskInputController = TextEditingController();
 
@@ -40,18 +44,23 @@ class _HomeState extends State<Home> {
     _initializeApp();
   }
 
-  Future<void> _initializeApp() async{
-    const String url = 'http://zainabfrfr.pythonanywhere.com/initialization'; // this is the URL of the endpoint to which backend requests are made
+  Future<void> _initializeApp() async {
+    const String url =
+        'http://zainabfrfr.pythonanywhere.com/initialization'; // this is the URL of the endpoint to which backend requests are made
 
-    final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+    final http.Response response = await http.post(
+      //defined variable response to store response returned by HTTP post request
       Uri.parse(url),
-      headers: <String, String>{// defined a map as a header. the map has keys and values both of type string
-        'Content-Type':'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+      headers: <String, String>{
+        // defined a map as a header. the map has keys and values both of type string
+        'Content-Type':
+            'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
       },
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-      final List<String> variablesList = List<String>.from(responseData['variables']);
+      final List<String> variablesList =
+          List<String>.from(responseData['variables']);
 
       setState(() {
         variables = variablesList;
@@ -63,15 +72,19 @@ class _HomeState extends State<Home> {
 
   Future<void> _changeTimeSlots() async {
     //async operation that returns nothing
-    const String url = 'http://zainabfrfr.pythonanywhere.com/variables'; // this is the URL of the endpoint to which backend requests are made
+    const String url =
+        'http://zainabfrfr.pythonanywhere.com/variables'; // this is the URL of the endpoint to which backend requests are made
     final Map<String, String> data = {
       'timeslot': timeSlotSelected[pointer],
     };
 
-    final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+    final http.Response response = await http.post(
+      //defined variable response to store response returned by HTTP post request
       Uri.parse(url),
-      headers: <String, String>{// defined a map as a header. the map has keys and values both of type string
-        'Content-Type': 'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+      headers: <String, String>{
+        // defined a map as a header. the map has keys and values both of type string
+        'Content-Type':
+            'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
       },
       body: jsonEncode(data),
     );
@@ -88,26 +101,57 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<void> _generateSchedule() async{
-    const String url = 'http://zainabfrfr.pythonanywhere.com/tasks'; // this is the URL of the endpoint to which backend requests are made
+  Future<void> _generateSchedule() async {
+    const String url =
+        'http://zainabfrfr.pythonanywhere.com/schedulesGenerate'; // this is the URL of the endpoint to which backend requests are made
     final Map<String, dynamic> data = {
       'tasks': allTasks,
     };
 
-    final http.Response response = await http.post( //defined variable response to store response returned by HTTP post request
+    final http.Response response = await http.post(
+      //defined variable response to store response returned by HTTP post request
       Uri.parse(url),
-      headers: <String, String>{// defined a map as a header. the map has keys and values both of type string
-        'Content-Type': 'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
+      headers: <String, String>{
+        // defined a map as a header. the map has keys and values both of type string
+        'Content-Type':
+            'application/json; charset=UTF-8', // indicates that content being sent in body will be in json format and encoded using UTF-8 character encoding
       },
       body: jsonEncode(data),
     );
 
-    if (response.statusCode == 200){
-      print("Successful Post Request");
-    }else{
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      print("json data received: ${responseData['schedules']}");
+      print("response size ${response.bodyBytes.length}");
+      final List<Map<String, dynamic>> aPS = [];
+
+      // adding all non-empty assignments to the list of possible schedules 
+      for (var schedule in responseData['schedules']) {
+        final orderedSchedule = <String, dynamic>{};
+        bool isEmpty = true; // Flag to track if the schedule is empty
+        for (var key in variables) {
+          if (schedule.containsKey(key)) {
+            orderedSchedule[key] = schedule[key];
+            isEmpty = false; // If any key exists, schedule is not empty
+          } else {
+            orderedSchedule[key] =
+                ''; // Use default value '' if the key doesn't exist
+          }
+        }
+        if (!isEmpty) {
+          // Add schedule to aPS only if it's not empty
+          aPS.add(orderedSchedule);
+        }
+      }
+
+      setState(() {
+        allPossibleSchedules = aPS;
+      });
+
+      print(allPossibleSchedules);
+    } else {
       print("Unsuccessful Post Request ${response.statusCode}");
     }
-
   }
 
   @override
@@ -183,7 +227,6 @@ class _HomeState extends State<Home> {
                         return CreateTask.build(
                             context, _taskInputController, variables);
                       });
-
                   print('Entered Task: $enteredTask');
                   setState(() {
                     allTasks.add(enteredTask);

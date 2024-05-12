@@ -15,9 +15,9 @@ class AddConstraints {
         child: ListBody(
           children: <Widget>[
             ListTile(
-              title: const Text('No constraints'),
+              title: const Text('No Constraints'),
               onTap: () {
-                constraint.add('No constraint');
+                constraint.add('No Constraints');
                 Navigator.of(context).pop(constraint); // Close dialog
               },
             ),
@@ -52,7 +52,7 @@ class AddConstraints {
             ListTile(
               title: const Text('Multitask!'),
               onTap: () {
-                constraint.add('Multitask');
+                constraint.add('Multitask!');
                 Navigator.of(context).pop(constraint);
               },
             ),
