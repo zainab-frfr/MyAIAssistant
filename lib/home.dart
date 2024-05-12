@@ -1,9 +1,8 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
     as http; //for making http requests to the backend
 import 'dart:convert'; // for encoding and decoding json data
+import 'schedule_generation_pages/possible_schedules.dart';
 import 'task_creation_pages/create_task.dart';
 
 class Home extends StatefulWidget {
@@ -121,11 +120,11 @@ class _HomeState extends State<Home> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-      print("json data received: ${responseData['schedules']}");
-      print("response size ${response.bodyBytes.length}");
+      // print("json data received: ${responseData['schedules']}");
+      // print("response size ${response.bodyBytes.length}");
       final List<Map<String, dynamic>> aPS = [];
 
-      // adding all non-empty assignments to the list of possible schedules 
+      // adding all non-empty assignments to the list of possible schedules
       for (var schedule in responseData['schedules']) {
         final orderedSchedule = <String, dynamic>{};
         bool isEmpty = true; // Flag to track if the schedule is empty
@@ -181,6 +180,42 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
+        ),
+      ),
+
+      //side menu
+      drawer: Drawer(
+        elevation: 5.0,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              padding: EdgeInsets.symmetric(vertical: 65.0, horizontal: 10.0),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 211, 196, 237),
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  //color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('My Schedule'),
+              onTap: () {
+                // Handle item 1 tap
+              },
+            ),
+            ListTile(
+              title: const Text('Create New Schedule'),
+              onTap: () {
+                Navigator.popAndPushNamed(context, '/home');
+              },
+            ),
+          ],
         ),
       ),
 
@@ -242,8 +277,15 @@ class _HomeState extends State<Home> {
                 elevation: 3.0,
                 child: const Icon(Icons.list_alt_rounded),
                 onPressed: () {
-                  //Navigator.pushNamed(context, '/possibleSchedules');
-                  _generateSchedule();
+                  _generateSchedule().then((_) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MySchedulePage(schedules: allPossibleSchedules),
+                      ),
+                    );
+                  });
                 },
               ),
             ],

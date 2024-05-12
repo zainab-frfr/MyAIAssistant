@@ -1,18 +1,42 @@
 import 'package:flutter/material.dart';
 
 class MySchedulePage extends StatefulWidget {
-  const MySchedulePage({super.key});
+  final List<Map<String, dynamic>> schedules;
+
+  const MySchedulePage({Key? key, required this.schedules}) : super(key: key);
 
   @override
   State<MySchedulePage> createState() => _MySchedulePageState();
 }
 
 class _MySchedulePageState extends State<MySchedulePage> {
-  final List<List<String>> schedules = [['option 1','run'],['option 2','eat'],['option 3','play']];
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor:Color.fromARGB(255, 246, 231, 253),
-      );
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 246, 231, 253),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20.0),
+        child: ListView.builder(
+          itemCount: widget.schedules.length,
+          itemBuilder: (context, index) {
+            final schedule = widget.schedules[index];
+            final entriesWithValues = schedule.entries.where((entry) => entry.value.isNotEmpty);
+            return ListTile(
+              title: Text('Schedule ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w500),),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var entry in entriesWithValues)
+                    Text('${entry.key}: ${entry.value}'),
+                ],
+              ),
+              onTap: (){
+                
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 }
