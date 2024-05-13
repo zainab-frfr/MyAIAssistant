@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "671616887473",
+    "project_id": "my-ai-assistant-e15a6",
+    "storage_bucket": "my-ai-assistant-e15a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671616887473:android:0f04fa66a2218e53f81090",
+        "android_client_info": {
+          "package_name": "com.example.my_ai_assistant_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCh5BcdFrAon7osoMvNHJjQ3TbRSiqBrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
