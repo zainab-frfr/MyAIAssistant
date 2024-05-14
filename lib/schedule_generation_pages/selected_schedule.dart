@@ -218,15 +218,9 @@ class _MySelectedScheduleState extends State<MySelectedSchedule> {
               Center(
                 child: Visibility(
                   visible: _isLoading,
-                  child: CircularProgressIndicator(),
+                  child: const CircularProgressIndicator(),
                 ),
               ),
-              if (widget.mySchedule.isEmpty && !_isLoading)
-                const Expanded(
-                  child: Center(
-                    child: Text("No schedule created..."),
-                  ),
-                ),
               if (widget.mySchedule.isNotEmpty && !_isLoading)
                 Expanded(
                   child: ListView.builder(
@@ -263,6 +257,12 @@ class _MySelectedScheduleState extends State<MySelectedSchedule> {
                         ),
                       );
                     },
+                  ),
+                ),
+              if (widget.mySchedule.isEmpty && !_isLoading)
+                const Expanded(
+                  child: Center(
+                    child: Text("No schedule created..."),
                   ),
                 ),
             ],
