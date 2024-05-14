@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'login.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class MySignupPage extends StatefulWidget {
   const MySignupPage({super.key});
@@ -31,7 +31,9 @@ class _MySignupPageState extends State<MySignupPage> {
 
         await Future.delayed(const Duration(seconds: 1));
 
+        createUserNode();
         // Navigate to the home page upon successful sign-up
+        // ignore: use_build_context_synchronously
         Navigator.popAndPushNamed(context, '/auth');
       } else {
         throw FirebaseAuthException(code: "e");
@@ -44,10 +46,19 @@ class _MySignupPageState extends State<MySignupPage> {
         incorrect = true;
       });
     }
-    // if (!incorrect) {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.pop(context);
-    // }
+  }
+
+  void createUserNode() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    print(user);
+    if (user != null) {
+      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+      // Set any initial data for the user if needed
+      await userRef.set({
+        'email': user.email,
+        // Add any other user-related data here
+      });
+    }
   }
 
   @override

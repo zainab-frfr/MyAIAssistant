@@ -48,6 +48,7 @@ class DefaultFirebaseOptions {
     authDomain: 'my-ai-assistant-e15a6.firebaseapp.com',
     storageBucket: 'my-ai-assistant-e15a6.appspot.com',
     measurementId: 'G-QFR7QJ0DPG',
+    databaseURL: 'https://my-ai-assistant-e15a6-default-rtdb.asia-southeast1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -56,6 +57,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671616887473',
     projectId: 'my-ai-assistant-e15a6',
     storageBucket: 'my-ai-assistant-e15a6.appspot.com',
+    databaseURL: 'https://my-ai-assistant-e15a6-default-rtdb.asia-southeast1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -65,6 +67,7 @@ class DefaultFirebaseOptions {
     projectId: 'my-ai-assistant-e15a6',
     storageBucket: 'my-ai-assistant-e15a6.appspot.com',
     iosBundleId: 'com.example.myAiAssistantFrontend',
+    databaseURL: 'https://my-ai-assistant-e15a6-default-rtdb.asia-southeast1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -74,6 +77,7 @@ class DefaultFirebaseOptions {
     projectId: 'my-ai-assistant-e15a6',
     storageBucket: 'my-ai-assistant-e15a6.appspot.com',
     iosBundleId: 'com.example.myAiAssistantFrontend',
+    databaseURL: 'https://my-ai-assistant-e15a6-default-rtdb.asia-southeast1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -84,5 +88,6 @@ class DefaultFirebaseOptions {
     authDomain: 'my-ai-assistant-e15a6.firebaseapp.com',
     storageBucket: 'my-ai-assistant-e15a6.appspot.com',
     measurementId: 'G-R5F9G4ZEWJ',
+    databaseURL: 'https://my-ai-assistant-e15a6-default-rtdb.asia-southeast1.firebaseio.com/',
   );
 }

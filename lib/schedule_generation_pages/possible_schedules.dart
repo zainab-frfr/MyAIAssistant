@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'selected_schedule.dart';
@@ -12,6 +14,15 @@ class MySchedulePage extends StatefulWidget {
 }
 
 class _MySchedulePageState extends State<MySchedulePage> {
+
+  void saveScheduleData(Map<String, dynamic> mySchedule) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+      await userRef.child('mySchedule').set(mySchedule);
+    }
+ }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +44,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                 ],
               ),
               onTap: (){
+                saveScheduleData(schedule);
                 Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

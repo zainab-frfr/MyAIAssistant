@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
     as http; //for making http requests to the backend
@@ -154,6 +155,14 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void saveAllTasks(List<List> allTasks) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+      await userRef.child('allTasks').set(allTasks);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -284,6 +293,7 @@ class _HomeState extends State<Home> {
                 elevation: 3.0,
                 child: const Icon(Icons.list_alt_rounded),
                 onPressed: () {
+                  saveAllTasks(allTasks);
                   _generateSchedule().then((_) {
                     Navigator.push(
                       context,
