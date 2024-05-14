@@ -155,6 +155,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  //saves allTasks into Firebase
   void saveAllTasks(List<List> allTasks) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {

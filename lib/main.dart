@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         '/auth': (context) => const AuthPage(),
         '/login': (context) => const MyLoginPage(),
         '/signup': (context) => const MySignupPage(),
-        '/mySchedule': (context) => const MySelectedSchedule.withoutSchedule(),
+        '/mySchedule': (context) => MySelectedSchedule.withoutSchedule(),
       },
     );
   }

@@ -14,14 +14,15 @@ class MySchedulePage extends StatefulWidget {
 }
 
 class _MySchedulePageState extends State<MySchedulePage> {
-
+  
   void saveScheduleData(Map<String, dynamic> mySchedule) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(user.uid);
       await userRef.child('mySchedule').set(mySchedule);
     }
- }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,13 @@ class _MySchedulePageState extends State<MySchedulePage> {
           itemCount: widget.schedules.length,
           itemBuilder: (context, index) {
             final schedule = widget.schedules[index];
-            final entriesWithValues = schedule.entries.where((entry) => entry.value.isNotEmpty);
+            final entriesWithValues =
+                schedule.entries.where((entry) => entry.value.isNotEmpty);
             return ListTile(
-              title: Text('Schedule ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w500),),
+              title: Text(
+                'Schedule ${index + 1}',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -43,15 +48,15 @@ class _MySchedulePageState extends State<MySchedulePage> {
                     Text('${entry.key}: ${entry.value}'),
                 ],
               ),
-              onTap: (){
+              onTap: () {
                 saveScheduleData(schedule);
                 Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MySelectedSchedule(mySchedule: schedule),
-                      ),
-                    );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MySelectedSchedule(mySchedule: schedule),
+                  ),
+                );
               },
             );
           },
