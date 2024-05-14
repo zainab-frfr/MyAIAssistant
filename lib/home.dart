@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
     as http; //for making http requests to the backend
@@ -213,6 +214,12 @@ class _HomeState extends State<Home> {
               title: const Text('Create New Schedule'),
               onTap: () {
                 Navigator.popAndPushNamed(context, '/home');
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
               },
             ),
           ],
