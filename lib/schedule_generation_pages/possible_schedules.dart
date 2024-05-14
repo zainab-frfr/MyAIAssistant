@@ -28,36 +28,60 @@ class _MySchedulePageState extends State<MySchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 231, 253),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 211, 196, 237),
+        title: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Possible Schedules",
+                style: const TextStyle(
+                    fontWeight: FontWeight.w900, fontSize: 20.0),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
         child: ListView.builder(
           itemCount: widget.schedules.length,
           itemBuilder: (context, index) {
             final schedule = widget.schedules[index];
             final entriesWithValues =
                 schedule.entries.where((entry) => entry.value.isNotEmpty);
-            return ListTile(
-              title: Text(
-                'Schedule ${index + 1}',
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (var entry in entriesWithValues)
-                    Text('${entry.key}: ${entry.value}'),
-                ],
-              ),
-              onTap: () {
-                saveScheduleData(schedule);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        MySelectedSchedule(mySchedule: schedule),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                color: Color.fromARGB(255, 226, 210, 255),
+                child: ListTile(
+                  title: Text(
+                    'Schedule ${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                );
-              },
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var entry in entriesWithValues)
+                        Text('${entry.key}: ${entry.value}'),
+                    ],
+                  ),
+                  onTap: () {
+                    saveScheduleData(schedule);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MySelectedSchedule(mySchedule: schedule),
+                      ),
+                    );
+                  },
+                  
+                ),
+              ),
             );
           },
         ),
