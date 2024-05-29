@@ -1,16 +1,10 @@
-# my_ai_assistant_frontend
+# My AI Assistant
 
-A new Flutter project.
+A productivity application developed using Flutter, designed to help users efficiently schedule their daily tasks. Users input tasks with or 
+without time constraints, and the app generates all possible schedules for the day, allowing users to select their preferred schedule. 
 
-## Getting Started
+The backend is written in Python and hosted on PythonAnywhere, with Flask API to connect with the frontend. 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A modified Constraint Satisfaction Problem (CSP) algorithm with arc consistency is implemented to produce all possible schedules, not just one. 
+Firebase Authentication and Firebase Realtime Database are integrated for user management and data storage, ensuring seamless and secure 
+user experiences.
